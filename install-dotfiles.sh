@@ -25,17 +25,13 @@ fi
 # Check if the clone was successful
 if [ $? -eq 0 ]; then
   echo "removing old configs"
-  rm -rf ~/.config/ghostty/config
+  rm -rf ~/.config/tmux
+  rm -rf ~/.config/yazi
 
   cd "$REPO_NAME"
-  stow ghostty
   stow tmux
   stow yazi
 else
   echo "Failed to clone the repository."
   exit 1
 fi
-
-# Add tmux keybind if missing
-BIND_LINE='bind -x '"'"'"\C-f":"$HOME/.config/tmux/tmux-sessionizer"'"'"
-grep -Fxq "$BIND_LINE" ~/.bashrc || echo "$BIND_LINE" >> ~/.bashrc
