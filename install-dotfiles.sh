@@ -25,11 +25,9 @@ fi
 # Check if the clone was successful
 if [ $? -eq 0 ]; then
   echo "removing old configs"
-  rm -rf ~/.config/tmux
   rm -rf ~/.config/yazi
 
   cd "$REPO_NAME"
-  stow tmux
   stow yazi
 else
   echo "Failed to clone the repository."
