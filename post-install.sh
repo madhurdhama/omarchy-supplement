@@ -1,9 +1,5 @@
 #!/bin/bash
 
-# Add tmux keybind if missing
-BIND_LINE='bind -x '"'"'"\C-f":"$HOME/.config/tmux/tmux-sessionizer"'"'"
-grep -Fxq "$BIND_LINE" ~/.bashrc || echo "$BIND_LINE" >> ~/.bashrc
-
 # Hyprland monitor scaling
 sed -i \
   -e 's/^env = GDK_SCALE,2$/env = GDK_SCALE,1/' \
