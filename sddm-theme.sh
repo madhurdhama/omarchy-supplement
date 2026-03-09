@@ -53,6 +53,6 @@ sudo sed -i "s|^ConfigFile=.*|ConfigFile=Themes/${variant}.conf|" "$METADATA"
 
 echo "==> Setting SDDM theme..."
 sudo mkdir -p /etc/sddm.conf.d
-echo -e "[Theme]\nCurrent=$THEME_NAME" | sudo tee /etc/sddm.conf.d/autologin.conf > /dev/null
+sudo sed -i "s/^Current=.*/Current=$THEME_NAME/" /etc/sddm.conf.d/autologin.conf
 
 echo "Done. Reboot required."
