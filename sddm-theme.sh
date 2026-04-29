@@ -1,34 +1,20 @@
 #!/bin/bash
 set -euo pipefail
 
-THEME_NAME="sddm-astronaut-theme"
-THEME_REPO="https://github.com/Keyitdev/sddm-astronaut-theme.git"
+THEME_NAME="pixie"
+THEME_REPO="https://github.com/xCaptaiN09/pixie-sddm.git"
 THEMES_DIR="/usr/share/sddm/themes"
-TMP_DIR="/tmp/$THEME_NAME"
-METADATA="$THEMES_DIR/$THEME_NAME/metadata.desktop"
-
-VARIANTS=(
-    "astronaut"
-    "black_hole"
-    "cyberpunk"
-    "hyprland_kath"
-    "jake_the_dog"
-    "japanese_aesthetic"
-    "pixel_sakura"
-    "pixel_sakura_static"
-    "post-apocalyptic_hacker"
-    "purple_leaves"
-)
+TMP_DIR="/tmp/pixie-sddm"
+CONFIG_FILE="/etc/sddm.conf.d/autologin.conf"
 
 echo "==> Installing dependencies..."
-sudo pacman --needed -S sddm qt6-svg qt6-virtualkeyboard qt6-multimedia-ffmpeg git
+sudo pacman --noconfirm --needed -S qt6-declarative qt6-svg qt6-quickcontrols2
 
 echo "==> Disabling autologin (if present)..."
-AUTOLOGIN_FILE="/etc/sddm.conf.d/autologin.conf"
-if [[ -f "$AUTOLOGIN_FILE" ]]; then
+if [[ -f "$CONFIG_FILE" ]]; then
     sudo sed -i '/^\[Autologin\]/,/^$/ {
         /^[^#]/ s/^/#/
-    }' "$AUTOLOGIN_FILE"
+    }' "$CONFIG_FILE"
 fi
 
 echo "==> Cloning theme..."
@@ -37,22 +23,12 @@ git clone --depth 1 "$THEME_REPO" "$TMP_DIR"
 
 echo "==> Installing theme..."
 sudo rm -rf "$THEMES_DIR/$THEME_NAME"
-sudo mkdir -p "$THEMES_DIR/$THEME_NAME"
-sudo cp -r "$TMP_DIR"/* "$THEMES_DIR/$THEME_NAME/"
-
-echo "==> Select theme variant:"
-select variant in "${VARIANTS[@]}"; do
-    if [[ -n "$variant" ]]; then
-        echo "Selected: $variant"
-        break
-    fi
-done
-
-echo "==> Applying variant..."
-sudo sed -i "s|^ConfigFile=.*|ConfigFile=Themes/${variant}.conf|" "$METADATA"
+sudo cp -r "$TMP_DIR" "$THEMES_DIR/$THEME_NAME"
 
 echo "==> Setting SDDM theme..."
-sudo mkdir -p /etc/sddm.conf.d
-sudo sed -i "s/^Current=.*/Current=$THEME_NAME/" /etc/sddm.conf.d/autologin.conf
+sudo sed -i "/^\[Theme\]/,/^$/ s/^Current=.*/Current=$THEME_NAME/" "$CONFIG_FILE"
 
-echo "Done. Reboot required."
+echo "==> Cleaning up..."
+rm -rf "$TMP_DIR"
+
+echo "✅ Done. Reboot required."
