@@ -26,9 +26,11 @@ fi
 if [ $? -eq 0 ]; then
   echo "removing old configs"
   rm -rf ~/.config/yazi
+  rm -rf ~/.config/kitty
 
   cd "$REPO_NAME"
   stow yazi
+  stow kitty
 else
   echo "Failed to clone the repository."
   exit 1

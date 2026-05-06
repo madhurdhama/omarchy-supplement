@@ -6,12 +6,10 @@
 ./omarchy-setup.sh
 
 # Disable autologin and change sddm theme
-echo -e "\e[1;33mDisable autologin and change sddm theme? (y/n):\e[0m"
-read answer
-
-if [[ "$answer" == "y" || "$answer" == "Y" ]]; then
-    echo "Running optional script..."
+# Run with ./install-all.sh sddm
+if [[ "$1" == "sddm" ]]; then
+    echo "Running SDDM theme install script..."
     ./install-sddm.sh
 else
-    echo "Skipped"
+    echo "Skipping SDDM theme install"
 fi
